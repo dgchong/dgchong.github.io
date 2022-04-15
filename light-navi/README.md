@@ -4,7 +4,7 @@
 
 &emsp;&emsp;在线演示地址：[https://www.dgchong.cn/light-navi/index.html](https://www.dgchong.cn/light-navi/index.html)
 
-&emsp;&emsp;代码包：[下载]()
+&emsp;&emsp;代码包：[下载](https://github.com/dgchong/light-navi/tags)
 
 
 ## 一、代码结构
@@ -156,4 +156,13 @@ lightNaviData = {
 &emsp;&emsp;
 &emsp;&emsp;		
 &emsp;&emsp;
-&emsp;&emsp; **如果你觉得`light-navi`还不错的话，右上角帮点个小:star::star::star:吧~	:blush:**
+&emsp;&emsp;
+&emsp;&emsp;
+
+**如果你觉得`light-navi`还不错的话，右上角帮点个小:star::star::star:吧~	:blush:**
+
+&emsp;&emsp;
+&emsp;&emsp;		
+&emsp;&emsp;
+&emsp;&emsp;
+&emsp;&emsp;
