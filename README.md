@@ -1,2 +1,3 @@
 # 东瓜冲
-一个自娱自乐的地方。
+欢迎来到
+[dgchong.cn](https://www.dgchong.cn)
