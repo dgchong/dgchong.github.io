@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><link rel="icon" href="/images/favicon.ico"><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" /><meta property="og:url"  content="https://dgchong.cn/en/blogs/talk-about-technical-architecture/" />
+    <meta property="og:type" content="article" /><meta property="og:title" content="架构杂谈——也谈互联网系统架构演进" /><meta property="og:description" content="得益于过去几年互联网行业的快速发展与繁荣，在今天看来，这些技术/解决方案似乎早已不是什么新鲜的东西了，但是，本文笔者仍想简单聊聊这个话题，权当闲聊了。一家之言，姑且看看，不妥之处，还请淡然笑之。" /><meta property="og:image:width"  content="375" />
+        <meta property="og:image:height" content="250" /><meta property="og:image" content="https://dgchong.cn/en/blogs/talk-about-technical-architecture/ta_hu5d98ca782c8bcb789c89210a0f8e3e46_79292_600x0_resize_q75_box.jpg" /><title>东瓜冲 | dgchong.cn - 架构杂谈——也谈互联网系统架构演进</title>
+
+    
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet"><link rel="stylesheet" type="text/css" href="/css/style.2527643c9f8ecc7a2c2371db17bdc3ae0982d79babbb1e9fd9316d40a8177c4d.css" integrity="sha256-JSdkPJ&#43;OzHosI3HbF73DrgmC15urux6f2TFtQKgXfE0=">
+<link rel="stylesheet" type="text/css" href="/css/monokai-sublime.9.15.8.min.91376415864fdd3a92be524052267afece4bdb1bb8c6c754f5e60c5ac28e93be.css" integrity="sha256-kTdkFYZP3TqSvlJAUiZ6/s5L2xu4xsdU9eYMWsKOk74=">
+<link rel="stylesheet" type="text/css" href="/css/all.min.2d91c07e15fc26f2697117b326256c0a2b0586dd12a15c622a53cd47a9e54a1d.css" integrity="sha256-LZHAfhX8JvJpcRezJiVsCisFht0SoVxiKlPNR6nlSh0=">
+<link rel="stylesheet" type="text/css" href="/css/refresh.ccfd23f8053a1571a3e474a6877f42a6a1924c6bbf1b64c7704b49a0353b4650.css" integrity="sha256-zP0j&#43;AU6FXGj5HSmh39CpqGSTGu/G2THcEtJoDU7RlA=">
+<link rel="stylesheet" type="text/css" href="/css/devicon.min.149016fbf45c8bc157d6f55ce3ee875feaa3f90446bf7d151fbc16a9f21a8859.css" integrity="sha256-FJAW&#43;/Rci8FX1vVc4&#43;6HX&#43;qj&#43;QRGv30VH7wWqfIaiFk=">
+    
+
+  </head>
+  <body>
+     
+
+    <div id="preloader">
+      <div id="status"></div>
+    </div><nav class="navbar is-fresh is-transparent no-shadow" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+
+      
+      
+      
+      <a class="navbar-item" href="/en/">
+        <img src="/images/logo.png" alt="" width="40" height="40">
+        <div class="navbar-item">
+          Dgchong Studio
+        </div>
+      </a>
+
+      <div class="navbar-item is-expanded"></div>
+      <a class="navbar-item is-hidden-desktop">  
+        <div data-target="navbar-menu" class="navbar-item right-menu-icon-wrapper is-hidden-desktop">
+          Menu
+        </div>
+        <div data-target="navbar-menu" class="menu-icon-wrapper right-menu-icon-wrapper" style="visibility: visible;">
+          <svg width="1000px" height="1000px">
+            <path class="path1" d="M 300 400 L 700 400 C 900 400 900 750 600 850 A 400 400 0 0 1 200 200 L 800 800"></path>
+            <path class="path2" d="M 300 500 L 700 500"></path>
+            <path class="path3" d="M 700 600 L 300 600 C 100 600 100 200 400 150 A 400 380 0 1 1 200 800 L 800 200"></path>
+          </svg>
+          <button id="menu-icon-trigger" class="menu-icon-trigger"></button>
+        </div>
+      </a>
+    </div><div id="navbar-menu" class="navbar-menu is-static">
+      
+      <div class="navbar-end">
+        <a class="navbar-item" href="/en/">
+          <div class="navbar-item">
+            Homepage
+          </div>
+        </a>
+        <a href="/en/about/" class="navbar-item is-secondary">About</a><a href="/en/blogs/" class="navbar-item is-secondary">Blogs</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a href="/en/opensource/" class="navbar-link">Open Source</a>
+              <div class="navbar-dropdown">
+                <a href="/en/opensource/light-navi/" class="navbar-item">Light-Navi</a><a href="/en/opensource/yapi-plugin/" class="navbar-item">Yapi-smart-doc-maven-plugin</a></div>
+            </div>
+        
+          
+            
+          
+        
+          
+            
+          
+        
+        
+        
+          
+            
+          
+        
+        
+        
+        
+        
+        <div class="navbar-item">
+          <div class="dropdown is-hoverable is-centered" >
+            <div class="dropdown-trigger" >
+              <button class="button is-active" 
+              style="color:#999;  
+                    border-color:#00AA32; 
+                    box-shadow: none ;
+                    padding-right: 0.625em ; 
+                    padding-left: 0.625em  ;
+                    ">
+
+                <span>EN</span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu" style="min-width: 0em;">
+              <div class="dropdown-content" style="padding: 0rem;">
+                
+                
+                
+                  
+                
+                  
+                
+                
+                  
+                  <a href="https://dgchong.cn/blogs/talk-about-technical-architecture/" class="dropdown-item" 
+                      style="text-align: center; color:#999; padding-right: 0.82em !important ; padding-left: 0.82em !important;">
+                    ZH
+                  </a>
+                
+                
+                  
+                    
+                  
+                
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+<nav id="navbar-clone" class="navbar is-fresh is-transparent" role="navigation" aria-label="main navigation">
+  <div class="container">
+      <div class="navbar-brand">
+  
+        
+        
+        
+       <a class="navbar-item" href="/en/">
+          <img src="/images/logo.png" alt="" width="40" height="40">
+          <div class="navbar-item">
+            Dgchong Studio
+          </div>
+        </a>
+  
+        <div class="navbar-item is-expanded"></div>
+        <a class="navbar-item is-hidden-desktop">  
+          <div data-target="cloned-navbar-menu" class="navbar-item right-menu-icon-wrapper is-hidden-desktop">
+            Menu
+          </div>
+          <div data-target="cloned-navbar-menu" class="menu-icon-wrapper right-menu-icon-wrapper" style="visibility: visible;">
+            <svg width="1000px" height="1000px">
+              <path class="path1" d="M 300 400 L 700 400 C 900 400 900 750 600 850 A 400 400 0 0 1 200 200 L 800 800"></path>
+              <path class="path2" d="M 300 500 L 700 500"></path>
+              <path class="path3" d="M 700 600 L 300 600 C 100 600 100 200 400 150 A 400 380 0 1 1 200 800 L 800 200"></path>
+            </svg>
+            <button id="menu-icon-trigger" class="menu-icon-trigger"></button>
+          </div>
+        </a>
+      </div><div id="cloned-navbar-menu" class="navbar-menu is-static">
+        <div class="navbar-end">
+          <a class="navbar-item" href="/en/">
+            <div class="navbar-item">
+              Homepage
+            </div>
+          </a><a href="/en/about/" class="navbar-item is-secondary">About</a><a href="/en/blogs/" class="navbar-item is-secondary">Blogs</a><div class="navbar-item has-dropdown is-hoverable">
+                <a href="/en/opensource/" class="navbar-link">Open Source</a>
+                <div class="navbar-dropdown">
+                  <a href="/en/opensource/light-navi/" class="navbar-item">Light-Navi</a><a href="/en/opensource/yapi-plugin/" class="navbar-item">Yapi-smart-doc-maven-plugin</a></div>
+              </div>
+          
+            
+              
+            
+          
+            
+              
+            
+          
+          
+          
+            
+              
+            
+          
+
+          
+          
+          
+          <div class="navbar-item">
+            <div class="dropdown is-hoverable is-centered" >
+              <div class="dropdown-trigger" >
+                <button class="button is-active" 
+                style="color:#999;  
+                      border-color:#00AA32; 
+                      box-shadow: none ;
+                      padding-right: 0.625em ; 
+                      padding-left: 0.625em  ;
+                      ">
+  
+                  <span>EN</span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu" style="min-width: 0em;">
+                <div class="dropdown-content" style="padding: 0rem;">
+                  
+                  
+                  
+                    
+                  
+                    
+                  
+                  
+                    
+                    <a href="https://dgchong.cn/blogs/talk-about-technical-architecture/" class="dropdown-item" 
+                        style="text-align: center; color:#999; padding-right: 0.82em !important ; padding-left: 0.82em !important;">
+                      ZH
+                    </a>
+                  
+                  
+                    
+                      
+                    
+                  
+                    
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        
+        </div>
+      </div>
+    </div>
+  </nav>
+<section class="section is-medium">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-centered-tablet-portrait">
+        <h1 class="title is-2 section-title">架构杂谈——也谈互联网系统架构演进</h1>
+        <h5 class="subtitle is-5 is-muted"></h5>
+        <div class="divider"></div>
+        
+        <section class="section content has-text-justified">
+          <blockquote>
+<p><strong>Tips：</strong></p>
+<p>  说到互联网系统架构，随便网上一搜都有大量的相关文章/书籍，而这些，得益于过去几年互联网行业的快速发展与繁荣，在今天看来，这些技术/解决方案似乎早已不是什么新鲜的东西了，但是，本文笔者仍想简单聊聊这个话题，权当闲聊了。一家之言，姑且看看，不妥之处，还请淡然笑之。</p>
+</blockquote>
+<h4 id="一前言">一、前言</h4>
+<p>  说到互联网系统架构，在互联网行业日渐成熟的今天，一谈到这背后的技术体系，很多人脑海中可能就会浮现从网上看到的，一个个庞大的知识图谱，能说地清楚其中一二的同学，自然是志得意满，而对于新入行的同学来说，则可能直接就劝退了。</p>
+<p>  那么，我们是否需要对所有的这些相关技术，都全部学习掌握呢？笔者以为，大可不必过渡焦虑，需要明白的是，一个庞大而复杂的互联网架构体系，必然是由一个强大的团队来共同支撑维护的，团队成员各司其职、各尽所长，而这也就是团队的力量。</p>
+<p>  当然，对于互联网系统架构的演进过程，相信很多人都有自己的理解，从单体应用到分布式应用、从开发框架到中间件技术、从容器化到云原生等等，不一而足。不过，在这庞杂的技术体系中，从宏观上理清其演变过程中的关键节点与可能面临的关键问题，对于我们理解一个大型互联网系统的架构，是很有裨益的。</p>
+<h4 id="二大型互联网系统架构常见演变过程">二、大型互联网系统架构常见演变过程</h4>
+<blockquote>
+<p><strong>Tips:</strong></p>
+<p>  系统架构应当是基于具体业务场景的，脱离了具体业务谈技术架构，难免有空中楼阁、镜花水月之嫌。系统架构常见的演变过程，网上的相关文章不胜枚举，不过，为了保持本文整体的完整性与连惯性，笔者以为，仍需从基本的系统架构演进过程说起，纲举则目张，先对常见大型互联网系统架构的演进过程有一个整体上的大致梳理，再说演进过程中常见的问题，也就水到渠成了。</p>
+</blockquote>
+<p>  “<strong>一个优秀的大型互联网系统架构，不是设计出来的，而是不断演进而来的</strong>” ，类似的观点，相信大家都有所了解，也有所思考，但是，为什么是这样的呢？是技术同学技术能力不够， 设计不出优秀的系统架构吗，还是说技术同学写的 BUG 太多，需要不断修复？</p>
+<p>  笔者以为，都不是，架构的演变，其本质在于<strong>技术是服务于业务需求的，而业务需求是不断变化发展的</strong>，而这，天生就注定了技术架构的不断演变，是一种必然的选择。也正是因为随着业务的不断发展，用户体量不断增长，业务场景越来越复杂，为了不断满足这些需求，对系统的要求也就自然越来越高，所以，这才是系统架构不断演变的根本原因。</p>
+<p>  通常情况下，互联网系统技术架构的演变大致会经历以下几个阶段：</p>
+<p><img src="http://img.dgchong.cn/article/structure01.jpg" alt="http://img.dgchong.cn/article/structure01.jpg"></p>
+<p>在云服务越来越成熟的今天，以下，笔者对各阶段的技术架构进行简单说明：</p>
+<h5 id="1单节点架构">1、单节点架构</h5>
+<p>  在互联网业务发展的初期，通常是一些尝试性的产品探索/试验，而这些需求往往就是需求提出者的一个瞬间想法/点子，衍生完善而来。其需要的是快速实现其创意，并快速投放到市场验证，然后不断收集市场反馈，完善整体的产品逻辑，因此，其典型特点就是时效要求高、产品逻辑不够完善、不确定性大。</p>
+<p>  在这一阶段，对技术架构通常没有太高的要求，只需要实现基本的业务功能就行，从而技术投入自然也就不大，因此，单节点架构是比较适合。即通常所说的，<strong>所有代码写在一个工程中，应用、存储等服务部署在一台机器上</strong>。技术人员在这一阶段最关键的在于<strong>保持良好的编程习惯、尽量预留演进余地</strong>。</p>
+<p>  当然，在云服务日渐成熟的今天，单节点架构通常如下图所示：</p>
+<p><img src="http://img.dgchong.cn/article/structure02.jpg" alt="http://img.dgchong.cn/article/structure02.jpg"></p>
+<p>即，技术人员只需要将自己的业务代码部署在云服务器上，数据直接存储在云数据库中，高效且可靠性较高。（当然，也可以直接在云服务器上自己搭建数据库来存储，但现在一般不会/不需要这么做了）</p>
+<h5 id="2集群架构">2、集群架构</h5>
+<p>  随着业务的发展，对系统的处理能力、高可用性也就提出了越来越高的要求，在单节点的基础上，集群架构应运而生，集群架构通常如下图所示：</p>
+<p><img src="http://img.dgchong.cn/article/structure03.jpg" alt="http://img.dgchong.cn/article/structure03.jpg"></p>
+<p>  在集群架构阶段，引入的技术/组件会慢慢变多，团队成员也会逐渐壮大，到了这一阶段，说明核心产品形态已初步成型，并已有相对稳定的、 一定规模的流量，此时，技术团队开始迎来挑战。在这一阶段，技术团队最大的关键问题在于<strong>规范制定/团队建设/人才储备</strong>。</p>
+<blockquote>
+<p><strong>Tips:</strong></p>
+<p>  在云服务厂商的支持下，集群架构已经能够支撑较大的用户流量了。云服务器、云数据库等云端基础服务的支撑能力，也比前些年要好了很多，升级扩容也方便了许多，已经足够满足一般规模下的系统性能需求了。所以，不要觉得业务量一上来，就立马要改系统架构，因为这反而可能带来不必要的麻烦。有时，直接通过升级云服务器/云数据库等的配置，就可以解决问题了。（通常来说，常规业务场景下，通过一些优化改造，顶住 1 万以内的 QPS 是没有太大问题的）。</p>
+</blockquote>
+<h5 id="3分布式集群架构">3、分布式集群架构</h5>
+<p>  随着业务的进一步发展，系统流量越来越大，业务复杂度越来越高，需求迭代越来越频繁，技术团队成员也快速发展（50 人以上），此时，团队协作、业务响应效率、系统“<strong>三高</strong>”诉求等问题日益凸显，集群架构的不足之处日渐明显，此时，分布式集群架构的改造工作，也就需要开始提上日程了。</p>
+<p>分布式集群架构简易示意如下图所示：</p>
+<p><img src="http://img.dgchong.cn/article/structure04.jpg" alt="http://img.dgchong.cn/article/structure04.jpg"></p>
+<p>  从集群架构演变到分布式集群架构，业务场景复杂度、技术复杂度都变地极高，繁杂的业务/技术需求，要求一个更专业的团队去整体协作支撑。在这一阶段，技术团队的关键问题在于<strong>技术选型/团队协作/工具化自动化/业务重构</strong> 。（实际系统架构情况要远远复杂得多，此处只是简单示意）</p>
+<blockquote>
+<p><strong>Tips:</strong></p>
+<p>  分布式集群架构改造过程中，需要对业务进行合理的梳理与服务划分，否则，技术架构的改造不但不能解决实际问题，反而可能带来一系列的麻烦，那就真的成了“<strong>毒药</strong>”了。</p>
+</blockquote>
+<h5 id="4未来架构">4、未来架构</h5>
+<p>  未来系统架构到底会往哪个方向发展，是往 ServiceMesh 方向发展，还是往 Serverless 方向发展，异或是别的方向？笔者也说不好，虽然这些技术架构方案都在某些方面体现了一些优越性，看起来设计理念确实很好，但是目前为止，笔者还没有看到太多成功落地实施的、较大规模系统的相关案例。所以，此处笔者也就不多妄言了。</p>
+<p>  但是，笔者以为，有一点趋势还是比较明显的，那就是，云服务在未来技术架构中，将扮演越来越重要的角色。未来，对绝大多数中小企业来说，技术架构的&quot;<strong>云化</strong>&ldquo;将是必然的选择；与此同时，随着云服务的日益完善，<strong>低代码化</strong>也将成为一个重要的、解决实际业务问题的一种选择。</p>
+<blockquote>
+<p><strong>Tips:</strong></p>
+<p>  微服务架构、容器化部署架构、SOA 架构、混合云架构等等，笔者以为，其实都可以看做是集群架构/分布式集群架构的延伸与变种，虽然具体概念上有些不同，但大体上来说，基本上在相应的设计理念边界上，并没有颠覆性的区别。</p>
+</blockquote>
+<p>  以上，就是对互联网系统架构演进过程的简单描述，作为一名技术人员，通常来说，大概率是不会完整经历以上过程的，能亲身经历一个大型互联网系统架构从 0 到 1 的演变过程，实属幸运。</p>
+<h4 id="三架构演变不常说的一些问题">三、架构演变不常说的一些问题</h4>
+<p>  以上所述，在不少书籍/教程中基本都有相关的详细描述，笔者就不再过多赘述了，此处笔者再说几点其它地方可能提的比较少的，关于系统架构演变相关的一些问题。</p>
+<h5 id="1选择分布式集群架构的原因">1、选择分布式集群架构的原因</h5>
+<p>  采用分布式集群架构（微服务），最关键的原因，不仅仅是为了解决系统性能问题，很大一部分原因，是为了解决<strong>业务迭代</strong>、<strong>团队协作</strong>、<strong>开发调试</strong>、<strong>编译部署</strong>等问题。这是因为，随着系统业务复杂度的提升、团队成员的增加，对单节点架构/集群架构来说，除了性能问题外，业务耦合度高且逻辑不清晰、业务版本迭代不便且协作开发易冲突、代码调试繁琐且部署风险大，等相关问题会逐渐变成主要矛盾，而通过分布式架构改造，就能较好地解决这些问题。</p>
+<h5 id="2分布式集群架构改造的关键点">2、分布式集群架构改造的关键点</h5>
+<p>  在技术架构演变的过程中，决不是简单粗暴地扩机器、拆代码、分服务，在不断演进过程中，难点其实在于<strong>对业务模型的完善设计，对业务流程的重新梳理</strong>，也就是<strong>业务架构</strong>。</p>
+<p>  如果说，从单节点架构/集群架构过渡到分布式集群架构的过程中，只是选一个分布式服务框架，然后将原有代码结构进行简单拆分成各个服务包，再通过框架来进行调用，那么，这决不算完成了分布式架构的演进。现如今，社区已有较为成熟的整套分布式集群架构解决方案，在系统改造过程中，分布式框架的选型与技术方案的制定，已不再是最困难的问题。相对而言，在改造过程中，如何对现有业务逻辑进行整体梳理与服务划分改造，才是重点与难点，因为在这一阶段，通常会面临改造服务与线上服务同时运行的兼容问题，以及其它可能存在的较为沉重的历史包袱。（这也是 <strong>DDD</strong> 最近几年日趋火热的原因之一吧）</p>
+<h5 id="3架构演变需要考虑的因素">3、架构演变需要考虑的因素</h5>
+<p>  技术是服务于业务的，不能完全脱离于业务谈技术架构，所以，在进行技术架构设计/选型时，要充分结合实际业务场景进行取舍与平衡，切忌盲目随大流，人云亦云。更进一步，业务通常都是基于一定的商业目的的（政府/公益组织等不在其中），所以，<strong>在做技术架构时，商业因素有时也是需要考虑的</strong>。有时，甚至政策/法律/语言文化等因素，可能也需要有所考量。</p>
+<h5 id="4架构演进的终点">4、架构演进的终点</h5>
+<p>  技术架构是一个非常复杂的系统工程，从宏观上的整体把握到基本的代码实现，从服务端架构到客户端架构，从基础中间件到异构系统，凡此种种，浩如烟海，学无止境，<strong>我们只是站在前人的肩膀上，才不至于太过狼狈，要时刻心怀敬畏之心</strong>。分布式集群架构的代码改造完成只是万里长征的第一步，后续，服务治理才是分布式集群架构中的重点与难点。可以说，只要业务场景有需要，技术架构演进，永无止境。</p>
+<h5 id="5架构演进技术选型的原则">5、架构演进技术选型的原则</h5>
+<p>  现如今，大多数技术痛点，社区都有许多成套的相关解决方案，在这个时候，切忌盲目套用，一篮子全都使用了，造成整个技术体系异常庞杂，开发/维护都较为繁琐。需要注意的是，技术架构不是做的越多越好，相反，应当尽量少做，大道至简。我们应该结合自己的实际情况，如业务场景、团队整体技术栈、成员技术水平等综合考量，尽量选择通用的、成熟的相关解决方案就可以了，不需要追求所谓“<strong>前沿</strong>”但还不够成熟的相关技术，简洁而清晰的，往往是最适合的。</p>
+<p><img src="http://img.dgchong.cn/article/structure05m.jpg" alt="http://img.dgchong.cn/article/structure05m.jpg"></p>
+<h5 id="6架构演进落地的关键点">6、架构演进落地的关键点</h5>
+<p>  系统架构的演进过程，其实就是一个不断取舍/平衡的过程，“<strong>三高</strong>”系统架构有常用的三板斧（<strong>扩容</strong>、<strong>缓存</strong>、<strong>流控</strong>），技术架构演变到最后，要实际落地的话，也会有三个关键问题需要处理，那就是业务、技术、团队协作之间这三者的平衡。</p>
+<p><img src="http://img.dgchong.cn/article/structure06m.jpg" alt="http://img.dgchong.cn/article/structure06m.jpg"></p>
+<p>  <strong>业务</strong>，指的是实际业务场景与业务迭代诉求；<strong>技术</strong>，指的是技术选型与制定的技术方案；<strong>团队协作</strong>，指的是技术团队内部之间（基础架构团队、运维团队、业务开发团队等）、跨部门团队之间的沟通与协作。如果这三者之间的关系没有处理/协调好的话，就会出现一个严重的问题，那就是技术方案都制定/预研完成了，结果实际推广落地时，却很难推进，甚至因长时间推不动而最终不了了之。（实际工作中，技术架构的落地，除了技术本身的问题，人的问题往往更难搞）</p>
+<p><img src="http://img.dgchong.cn/article/structure07m.jpg" alt="http://img.dgchong.cn/article/structure07m.jpg"></p>
+<h5 id="7架构演进中的安全问题">7、架构演进中的安全问题</h5>
+<p>  在互联网技术架构的演进过程中，系统安全问题通常没有被重点考虑，这点需要引起我们的重视。造成这种情况，应该说有多方面的原因吧，笔者以为，主要原因有以下几个：</p>
+<p>  一是<strong>云服务厂商的日趋完善</strong>。云服务使得开发/部署一个基本的、可靠性较高的应用较为简单，更进一步的是，云服务厂商本身，从整体上做了大量的安全方面的基础工作，如防火墙(硬件、软件)、风控识别、数据保护等等。因此，相对于早期的自建机房/服务器托管方式，系统层面的常规安全风险大大降低，即便出现相关风险的时候，云服务厂商也会及时解决/协助解决。而这，也在很大程度上让我们往往对安全问题不够敏感/重视。</p>
+<p>  二是<strong>第三方基础服务商的完善</strong>。一个系统所涉及的关键业务流程中的支付(支付宝、微信等)、消息推送(短信、邮件等)、风险识别(涉黄、敏感信息等)等等，都有成熟的服务商提供相关服务，通常只需要接入相应 SDK 即可快速实现相关能力，简便高效。（第三方基础服务供应商，一般都有一套相对成熟的安全/风控机制）</p>
+<p>  三是<strong>社区开发框架的成熟完善</strong>。在今天的互联网技术生态中，类似 Spring/Mybatis 之类的开发框架已越来越成熟稳定，几乎是行业标配，而得益于这些框架的完善，我们已不需要(或只需少量配置)就可处理/避免大多数常见的安全问题。</p>
+<p>  那么，我们是否真的可以忽略安全问题呢？当然不是，因为类似用户敏感数据保护问题、“羊毛党”问题等等、时刻警醒者我们，安全问题，无处不在。</p>
+<p><strong>最后</strong></p>
+<p>   工作在云服务厂商日渐成熟的今天，我们非常幸运，也非常不幸&hellip;</p>
+
+        </section>
+      </div>
+    </div>
+  </div>  
+  <div class="container">
+    <div class="columns">
+      <div class="column has-text-right is-family-monospace is-centered-tablet-portrait">
+        Last modified:&nbsp;15 May 2022</div>
+    </div>
+  </div><div class="container" style="margin-top: 80px;">
+      <hr/>
+      <div class="columns">
+        <div class="column is-centered-tablet-portrait">
+          
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '1a380dfb2919d0671fab',
+    clientSecret: '1bb9f659a3fddd0f00c55d009bb99f445dc58236',
+    repo: 'dgchong.github.io',
+    owner: 'dgchong',
+    admin: ['dgchong'],
+    id: location.pathname, 
+    distractionFreeMode: true 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+
+        </div>
+      </div>
+    </div></section>
+<footer class="footer footer-dark">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <img src="/images/foot-img.png" alt="">
+        
+      </div>
+      
+    <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>Website</h3>
+          </div>
+          <ul class="link-list"><li><a href="/en/credits/">
+                  <span class="icon"><i class="fa fa-cube"></i></span>
+                  Credits
+                </a></li>
+            <li><a href="/en/tags/">
+                <span class="icon"><i class="fa fa-tag"></i></span> 
+                All Tags
+              </a></li>
+          </ul>
+        </div>
+      </div>
+    
+      
+      <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>Contacts</h3>
+          </div>
+          <ul class="link-list">
+            
+            
+            <li>
+              <a href="https://github.com/dgchong" target="_blank">
+                <span class="icon"><i class="fab fa-github-square"></i></span>
+                
+                  Github
+                
+              </a>
+            </li>
+                         
+            
+            <li>
+              <a href="mailto:dgchongteam@163.com" target="_blank">
+                <span class="icon"><i class="fa fa-envelope"></i></span>
+                
+                  Email
+                
+              </a>
+            </li>
+            
+                   
+                   
+            
+            
+                         
+       
+          </ul>
+        </div>
+      </div>
+      
+
+      
+      <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>Copyright</h3>
+          </div>
+          <ul class="link-list">
+            <li>
+              <a>
+                <span class="icon"><i class="fa fa-copyright"></i></span>
+                dgchong.cn 2022-2023
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+
+    </div>
+  </div>
+</footer>
+    <div id="backtotop"><a href="#"></a></div><div class="sidebar scroll">
+  <div class="sidebar-header"><img src="/sidebar.svg" alt="">
+    
+    <a class="sidebar-close" href="javascript:void(0);">
+      <i data-feather="x"></i>
+    </a>
+  </div>
+  <div class="inner">
+    <ul class="sidebar-menu">
+      <li class="no-children"><a href="/en/tags/"><div class="columns">
+              <table width="100%">  
+                <tr>
+                  <td class="">
+                    <span class="icon"><i class="fa fa-cubes"></i></span>
+                    All Tags
+                  </td>
+                  <td class="has-text-right" >
+                      
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </a>
+      <li class="no-children">
+          <a href="/en/tags/open-source">
+            <div class="columns">
+              
+              <table width="100%">  
+                  <tr>
+                    <td class=""><span class="icon"><i class="fa fa-cube"></i></span>open source</td>
+                    <td class="has-text-right" >
+                        <div class="tag-number">2</div>
+                      
+                    </td>
+                    
+                  </tr>
+              </table>
+              
+            </div>
+          </a>
+      </li>
+      <li class="no-children">
+          <a href="/en/tags/technical-architecture">
+            <div class="columns">
+              
+              <table width="100%">  
+                  <tr>
+                    <td class=""><span class="icon"><i class="fa fa-cube"></i></span>Technical Architecture</td>
+                    <td class="has-text-right" >
+                        <div class="tag-number">2</div>
+                      
+                    </td>
+                    
+                  </tr>
+              </table>
+              
+            </div>
+          </a>
+      </li></ul>
+  </div>
+</div>
+<script src="/js/jquery-2.2.4.893e90f6230962e42231635df650f20544ad22affc3ee396df768eaa6bc5a6a2.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="></script>
+  <script src="/js/feather.4.22.0.1ab07abeb9975f283f6b5f29451981be680fbf77ea778f991d457511d210476a.js" integrity="sha256-GrB6vrmXXyg/a18pRRmBvmgPv3fqd4&#43;ZHUV1EdIQR2o="></script>
+  <script src="/js/modernizr-3.6.0.e013a1e54e3c19d83537ba42b900d34451e5e4b2e789be27a02ac9b152edb741.js" integrity="sha256-4BOh5U48Gdg1N7pCuQDTRFHl5LLnib4noCrJsVLtt0E="></script>
+  <script src="/js/refresh.62c1a9b7d85bcf4d944cd585a01dfa8fb15112a7d2cf9fb819db20493bfe7484.js" integrity="sha256-YsGpt9hbz02UTNWFoB36j7FREqfSz5&#43;4GdsgSTv&#43;dIQ="></script><script>
+  window.MathJax = {
+    loader: {
+      load: ['core', 'input/tex-base', 'output/chtml'],  
+      source: {
+        'core': '\/js\/mathjax\/core.d48fedf25c74c54fa6bf79646de92b02155872bdc4f5f7d0bbfc662523d8b4f5.js',
+        'input/tex-base': '\/js\/mathjax\/tex-base.1b68b8741dfc54e8f7222f88bea8ffcfc57ac54b2a2d8f4edf6800aa44d49441.js',
+        'output/chtml': '\/js\/mathjax\/chtml.926cd166e0f8c1f8a566a718d60c9c58a2b7142b156d30d5f02cec7c3b0ad60a.js',
+        'output/chtml/fonts/tex': '\/js\/mathjax\/tex_out.b8b2bb939c0dae84bf1390bfe6d32af13e83f647cdac01d544d2a7a517477e9d.js'
+      },
+    },
+    chtml: {
+      fontURL: '/fonts' 
+    },
+  };
+</script><script src="/js/mathjax/startup.234a2513e6bdbc1eee06ca19abceca30fe4034e82afb373c08274c1ba2feb1a6.js" integrity="sha256-I0olE&#43;a9vB7uBsoZq87KMP5ANOgq&#43;zc8CCdMG6L&#43;saY="></script>
+  <script src="/js/highlight.9.18.1.b1c58829c55afcc1f568022af4b08ed8976da404d2990b7535bd8e19c0e3310c.js" integrity="sha256-scWIKcVa/MH1aAIq9LCO2JdtpATSmQt1Nb2OGcDjMQw="></script>
+  <script src="/js/highlightjs-line-numbers.2.7.0.min.ddfe282e07b7ec1ed069c23f92c7c8216ddb3f1879c4e962d37fd52adbd15a05.js" integrity="sha256-3f4oLge37B7QacI/ksfIIW3bPxh5xOli03/VKtvRWgU="></script><script>
+  hljs.initHighlightingOnLoad();
+  hljs.initLineNumbersOnLoad();
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('.codeinline').forEach((block) => {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+</body>
+</html>

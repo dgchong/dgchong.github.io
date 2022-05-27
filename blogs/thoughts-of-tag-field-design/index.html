@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head><link rel="icon" href="/images/favicon.ico"><meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" /><meta property="og:url"  content="https://dgchong.cn/blogs/thoughts-of-tag-field-design/" />
+    <meta property="og:type" content="article" /><meta property="og:title" content="数据库设计时设计标识字段的一些思考[mysql]" /><meta property="og:description" content="关于数据库设计时，给数据设计标识字段时的一些思考。" /><meta property="og:image:width"  content="375" />
+        <meta property="og:image:height" content="250" /><meta property="og:image" content="https://dgchong.cn/blogs/thoughts-of-tag-field-design/tod_hu5d98ca782c8bcb789c89210a0f8e3e46_78697_600x0_resize_q75_box.jpg" /><title>东瓜冲 | dgchong.cn - 数据库设计时设计标识字段的一些思考[mysql]</title>
+
+    
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Open&#43;Sans" rel="stylesheet"><link rel="stylesheet" type="text/css" href="/css/style.2527643c9f8ecc7a2c2371db17bdc3ae0982d79babbb1e9fd9316d40a8177c4d.css" integrity="sha256-JSdkPJ&#43;OzHosI3HbF73DrgmC15urux6f2TFtQKgXfE0=">
+<link rel="stylesheet" type="text/css" href="/css/monokai-sublime.9.15.8.min.91376415864fdd3a92be524052267afece4bdb1bb8c6c754f5e60c5ac28e93be.css" integrity="sha256-kTdkFYZP3TqSvlJAUiZ6/s5L2xu4xsdU9eYMWsKOk74=">
+<link rel="stylesheet" type="text/css" href="/css/all.min.2d91c07e15fc26f2697117b326256c0a2b0586dd12a15c622a53cd47a9e54a1d.css" integrity="sha256-LZHAfhX8JvJpcRezJiVsCisFht0SoVxiKlPNR6nlSh0=">
+<link rel="stylesheet" type="text/css" href="/css/refresh.ccfd23f8053a1571a3e474a6877f42a6a1924c6bbf1b64c7704b49a0353b4650.css" integrity="sha256-zP0j&#43;AU6FXGj5HSmh39CpqGSTGu/G2THcEtJoDU7RlA=">
+<link rel="stylesheet" type="text/css" href="/css/devicon.min.149016fbf45c8bc157d6f55ce3ee875feaa3f90446bf7d151fbc16a9f21a8859.css" integrity="sha256-FJAW&#43;/Rci8FX1vVc4&#43;6HX&#43;qj&#43;QRGv30VH7wWqfIaiFk=">
+    
+
+  </head>
+  <body>
+     
+
+    <div id="preloader">
+      <div id="status"></div>
+    </div><nav class="navbar is-fresh is-transparent no-shadow" role="navigation" aria-label="main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+
+      
+      
+      
+      <a class="navbar-item" href="/">
+        <img src="/images/logo.png" alt="" width="40" height="40">
+        <div class="navbar-item">
+          东瓜冲工作室
+        </div>
+      </a>
+
+      <div class="navbar-item is-expanded"></div>
+      <a class="navbar-item is-hidden-desktop">  
+        <div data-target="navbar-menu" class="navbar-item right-menu-icon-wrapper is-hidden-desktop">
+          菜单
+        </div>
+        <div data-target="navbar-menu" class="menu-icon-wrapper right-menu-icon-wrapper" style="visibility: visible;">
+          <svg width="1000px" height="1000px">
+            <path class="path1" d="M 300 400 L 700 400 C 900 400 900 750 600 850 A 400 400 0 0 1 200 200 L 800 800"></path>
+            <path class="path2" d="M 300 500 L 700 500"></path>
+            <path class="path3" d="M 700 600 L 300 600 C 100 600 100 200 400 150 A 400 380 0 1 1 200 800 L 800 200"></path>
+          </svg>
+          <button id="menu-icon-trigger" class="menu-icon-trigger"></button>
+        </div>
+      </a>
+    </div><div id="navbar-menu" class="navbar-menu is-static">
+      
+      <div class="navbar-end">
+        <a class="navbar-item" href="/">
+          <div class="navbar-item">
+            主页
+          </div>
+        </a>
+        <a href="/about/" class="navbar-item is-secondary">关于</a><a href="/blogs/" class="navbar-item is-secondary">博客</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a href="/opensource/" class="navbar-link">开源</a>
+              <div class="navbar-dropdown">
+                <a href="/opensource/light-navi/" class="navbar-item">Light-Navi导航</a><a href="/opensource/yapi-plugin/" class="navbar-item">Yapi-smart-doc-maven-plugin插件</a></div>
+            </div>
+        
+          
+            
+          
+        
+          
+            
+          
+        
+        
+        
+          
+            
+          
+        
+        
+        
+        
+        
+        <div class="navbar-item">
+          <div class="dropdown is-hoverable is-centered" >
+            <div class="dropdown-trigger" >
+              <button class="button is-active" 
+              style="color:#999;  
+                    border-color:#00AA32; 
+                    box-shadow: none ;
+                    padding-right: 0.625em ; 
+                    padding-left: 0.625em  ;
+                    ">
+
+                <span>ZH</span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu" style="min-width: 0em;">
+              <div class="dropdown-content" style="padding: 0rem;">
+                
+                
+                
+                  
+                
+                  
+                
+                
+                  
+                  <a href="https://dgchong.cn/en/blogs/thoughts-of-tag-field-design/" class="dropdown-item" 
+                      style="text-align: center; color:#999; padding-right: 0.82em !important ; padding-left: 0.82em !important;">
+                    EN
+                  </a>
+                
+                
+                  
+                
+                  
+                    
+                  
+                
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+<nav id="navbar-clone" class="navbar is-fresh is-transparent" role="navigation" aria-label="main navigation">
+  <div class="container">
+      <div class="navbar-brand">
+  
+        
+        
+        
+       <a class="navbar-item" href="/">
+          <img src="/images/logo.png" alt="" width="40" height="40">
+          <div class="navbar-item">
+            东瓜冲工作室
+          </div>
+        </a>
+  
+        <div class="navbar-item is-expanded"></div>
+        <a class="navbar-item is-hidden-desktop">  
+          <div data-target="cloned-navbar-menu" class="navbar-item right-menu-icon-wrapper is-hidden-desktop">
+            菜单
+          </div>
+          <div data-target="cloned-navbar-menu" class="menu-icon-wrapper right-menu-icon-wrapper" style="visibility: visible;">
+            <svg width="1000px" height="1000px">
+              <path class="path1" d="M 300 400 L 700 400 C 900 400 900 750 600 850 A 400 400 0 0 1 200 200 L 800 800"></path>
+              <path class="path2" d="M 300 500 L 700 500"></path>
+              <path class="path3" d="M 700 600 L 300 600 C 100 600 100 200 400 150 A 400 380 0 1 1 200 800 L 800 200"></path>
+            </svg>
+            <button id="menu-icon-trigger" class="menu-icon-trigger"></button>
+          </div>
+        </a>
+      </div><div id="cloned-navbar-menu" class="navbar-menu is-static">
+        <div class="navbar-end">
+          <a class="navbar-item" href="/">
+            <div class="navbar-item">
+              主页
+            </div>
+          </a><a href="/about/" class="navbar-item is-secondary">关于</a><a href="/blogs/" class="navbar-item is-secondary">博客</a><div class="navbar-item has-dropdown is-hoverable">
+                <a href="/opensource/" class="navbar-link">开源</a>
+                <div class="navbar-dropdown">
+                  <a href="/opensource/light-navi/" class="navbar-item">Light-Navi导航</a><a href="/opensource/yapi-plugin/" class="navbar-item">Yapi-smart-doc-maven-plugin插件</a></div>
+              </div>
+          
+            
+              
+            
+          
+            
+              
+            
+          
+          
+          
+            
+              
+            
+          
+
+          
+          
+          
+          <div class="navbar-item">
+            <div class="dropdown is-hoverable is-centered" >
+              <div class="dropdown-trigger" >
+                <button class="button is-active" 
+                style="color:#999;  
+                      border-color:#00AA32; 
+                      box-shadow: none ;
+                      padding-right: 0.625em ; 
+                      padding-left: 0.625em  ;
+                      ">
+  
+                  <span>ZH</span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu" style="min-width: 0em;">
+                <div class="dropdown-content" style="padding: 0rem;">
+                  
+                  
+                  
+                    
+                  
+                    
+                  
+                  
+                    
+                    <a href="https://dgchong.cn/en/blogs/thoughts-of-tag-field-design/" class="dropdown-item" 
+                        style="text-align: center; color:#999; padding-right: 0.82em !important ; padding-left: 0.82em !important;">
+                      EN
+                    </a>
+                  
+                  
+                    
+                  
+                    
+                      
+                    
+                    
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        
+        </div>
+      </div>
+    </div>
+  </nav>
+<section class="section is-medium">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-centered-tablet-portrait">
+        <h1 class="title is-2 section-title">数据库设计时设计标识字段的一些思考[mysql]</h1>
+        <h5 class="subtitle is-5 is-muted"></h5>
+        <div class="divider"></div>
+        
+        <section class="section content has-text-justified">
+          <h4 id="一前言">一、前言</h4>
+<p>  在很多应用场景中，通常需要给数据加上一些标识，以表明这条数据的某个特性，如：标识用户的性别、标识订单支付的渠道、标识商品的类型等等。在数据库设计时，通常我们会单独用一个字段来存储这些标识，如：可用gender字段来标识用户的性别,其值为“男”、“女”、“未知”这3种值中的一个;对于普通的具有有限固定的几个值的标识，这样自然没有什么问题，但是，对于一些同时具有多个属性且变化较大的就有些不合适了，比方说，标识智能手机的商品的类型时，其类型可标识为电子商品、娱乐商品、数码商品等多种类型，其具有的可分类属性众多且不固定；这些，就是本文需要讨论的：<strong>关于数据库设计时，给数据设计标识字段时的一些思考</strong>。</p>
+<p> </p>
+<h4 id="二常见场景问题与解决方法">二、常见场景、问题与解决方法</h4>
+<p> </p>
+<h5 id="场景一">场景一：</h5>
+<p><strong>问题与分析：</strong></p>
+<p>  用户是任何系统中最为重要的组成部分之一，在设计存储用户信息时，性别是用户信息的重要组成部分，应该如何存储呢？性别有 “男”、“女”2种情况，如果某个用户没有具体性别数据的话，可以标识为“未知”，因此，每一个用户，性别有“男”、“女”、“未知”共3种情况，我们需要在数据表字段中需要存储这3种情况的一种(实际应用可能需要更多情况以满足具体业务，这里姑且以常见的3种为例)。</p>
+<p><strong>思考与方法：</strong></p>
+<p>  方法一：在用户信息表中，添加一个性别字段，其数据类型为char，其值为“未知”、“男”、“女”中的一个，当需要使用该值时(前端展示、分析统计等)，直接取出使用即可。</p>
+<p>  方法二：在用户信息表中，添加一个字段，其数据类型为tinyint（一个字节），其值为 “0”、“1”、“2”，分别对应“未知”、“男”、“女”这3种情况，其中0对应的未知为默认值。当需要使用该值时，可针对不同的使用场景进行简单的转换，如前端需展示时可由数字转换成相应含义文字后再展示。</p>
+<p>  方法一的优点是语义明确、便于前端展示，不足之处有相对占用存储空间多、数据传输更耗流量等；方法二的优点是相对占用存储空间少、数据传输更省流量、一定程度上有利于数据统计分析，不足之处有展示时需要转换、数字语义需要约定等。笔者个人推荐使用方法二。(换个角度看，需要转换也带来了一定的灵活性，如：若某个业务需要展示性别为“保密”、“帅哥”、“靓女”，这样我们只需修改转换的地方即可，而不需修改数据库数据，这也有利于一个用户中心为不同的具体业务线提供服务)</p>
+<h5 id="场景二">场景二：</h5>
+<p><strong>问题与分析：</strong></p>
+<p>  电商平台通常会划分商品品类，如服饰类、食品类、数码类、书籍类等等，而有的商品可能具有多个商品品类属性，如智能手机，其既可划为数码类、又可划分为手机类、智能设备类，常见的场景是显示商品所属品类、修改商品的所属品类、查询某个品类下有哪些商品等，在这种情况下，该如何存储呢？</p>
+<p><strong>思考与方法：</strong></p>
+<p>  假如平台的商品品类共有n种，那么，理论上某个商品的所属品类可能的组合就有[2^n-1]种情况，当然，实际上不会有这么多组合，但像用户选择兴趣爱好之类的场景可能的组合就多了，因此，上文场景一中的2种方法已不再适用。</p>
+<p>  可行的一个方法是：再引入一个品类关系表，用于存储商品品类与各商品的关系。这样的话，商品信息表本身用一个字符字段直接存储其所属品类信息，以满足基本需求，而操作某个品类下的商品的相关业务，则可通过品类关系表去做；一旦发生数据的变化，则同时维护这2个地方的数据。（事实上，通常的做法是，一件商品最多只能划分为有限的商品品类，一个人最多只能选择有限个兴趣爱好，如：一件商品最多只能所属3种品类，一个人最多只能选5个兴趣爱好）</p>
+<h5 id="场景三">场景三：</h5>
+<p><strong>问题与分析：</strong></p>
+<p>  在电商系统中，通常会通过各种优惠的方式来促销，如给用户发各种优惠券、积分抵扣等，用户提交订单时可以使用满足条件的各种优惠；那么，如何存储该订单具体使用了哪些优惠信息呢？</p>
+<p><strong>思考与方法：</strong></p>
+<p>  与以上两种情况有所不同，以上的两种场景更多的业务场景是前端的展示与业务查询，而这种场景更多是标识优惠以计算用户实际所需支付金额，以及为后续业绩统计、制定促销计划、提高用户活跃度等提供数据依据。</p>
+<p><strong>实例分析：</strong></p>
+<p>  这里我们举一个具体例子来逐步分析，假设某平台为A平台，其平台当前可使用的优惠方式有以下几种：</p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>优惠内容</th>
+<th>使用条件</th>
+<th>是否长期有效</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>用户账户余额</td>
+<td>直接抵扣现金</td>
+<td>是</td>
+<td>用户充值所得(平台奖励吸引的充值，如：充100送10元)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>平台积分</td>
+<td>100积分抵扣1元</td>
+<td>是</td>
+<td>通过参与平台活动、购物行为积累获取</td>
+</tr>
+<tr>
+<td>3</td>
+<td>平台币(A币)</td>
+<td>直接抵扣，1个币抵扣1元</td>
+<td>是</td>
+<td>平台奖励(类似Q币之类的概念，姑且叫A币)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>满减卷5元</td>
+<td>满100减5元</td>
+<td>否</td>
+<td>平台活动促销发放</td>
+</tr>
+<tr>
+<td>5</td>
+<td>免邮费</td>
+<td>订单总金额符合条件即可</td>
+<td>是</td>
+<td>平台单笔订单总金额满199元免邮费</td>
+</tr>
+</tbody>
+</table>
+<p>  用户下单时，只要是满足各优惠的使用条件，就可以叠加使用各种优惠，那么，数据库如何存储用户具体使用了哪些优惠呢？（实际各种促销优惠可能更多，尤其是各种优惠券，这里姑且以5种举例）</p>
+<p><strong>分析：</strong></p>
+<p>  在这个业务场景中，用户下单时最多可以同时使用5种优惠抵扣方式，用户可能使用的优惠组合共有 2^5-1=31 种，在最终计算用户的订单实际需要支付的金额时，如何标识并存储用户到底使用了哪种优惠组合呢？</p>
+<p>  如果单独用一个普通标识字段来标识存储，实现起来是比较简单，但是其需要标识的组合种类实在有点多，不太利于编码与后续扩展，试想，如果新加了一种优惠类型，其需要添加多少种组合标识啊，且呈指数式爆长，这种方式显然不太合理。如果采用另外引入一张关联表的方式，专门用一张关联表来存储订单使用的优惠组合信息，每使用一种优惠就添加一条关联记录，相比单独使用普通字段标识，这在一定程度上减少了设置标识的繁琐性，增加了灵活性（每多使用一种优惠就添加一条关联记录），但是，同时也带来了另一些问题，其中主要问题是：新增一张关联表后，数据维护起来麻烦。在互联网场景下，数据量通常是非常大的，像订单数据一般都需要进行数据库sharding，以应对数据量暴涨后数据库的读写性能瓶颈，增加系统的水平扩展能力。因此，另外增加一张数据量是订单数据本身数据量几倍的关联表也显然不太合适。</p>
+<p>  那么，有没有一种方式既方便标识存储又方便扩展呢？</p>
+<p>我们试着以一种“<strong>特殊标识位</strong>”的方式来实现，具体思路如下：</p>
+<p>  a、定义一个标识位 mask 用于标识存储优惠信息；</p>
+<p>  b、mask存储的值并不是直接存1、2、3之类的十进制数字，而是存储一个二进制数转化后的十进制数，这些1、2、3之类的优惠数字表示占二进制数的第几位（从右至左数）；</p>
+<p>  c、具体数据的存储、读取判断通过工具类转换进行。</p>
+<p><strong>例：</strong></p>
+<p>  int 数据类型4个字节，共32位，除去符号位，可用于标识的位数有31位，即最多可以标识31种优惠情况，而如果是long数据类型的话，能标识的种类就更多了。</p>
+<p>  在以上共5种优惠方式场景中，可按如下标识存储：</p>
+<p><img src="http://img.dgchong.cn/article/tod01.jpg" alt="http://img.dgchong.cn/article/tod01.jpg"></p>
+<table>
+<thead>
+<tr>
+<th>优惠项</th>
+<th>占第几位</th>
+<th>二进制数</th>
+<th>十进制数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>优惠1</td>
+<td>1</td>
+<td>0000 0001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>优惠2</td>
+<td>2</td>
+<td>0000 0010</td>
+<td>2</td>
+</tr>
+<tr>
+<td>优惠3</td>
+<td>3</td>
+<td>0000 0100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>优惠4</td>
+<td>4</td>
+<td>0000 1000</td>
+<td>8</td>
+</tr>
+<tr>
+<td>优惠5</td>
+<td>5</td>
+<td>0001 0000</td>
+<td>16</td>
+</tr>
+</tbody>
+</table>
+<p>  说明：若用户使用了优惠1,则使用二进制数 00000001 标识，若使用了优惠2，则使用二进制数 00000010 标识，存储到DB时，转换成对应十进制数分别对应1、2；若同时使用了优惠１、优惠2，则使用二进制数 00000011 标识，最终存储到DB的对应十进制数是3。其它优惠项，所占的二进制位依次类推。</p>
+<p>关键代码示例如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// DiscountEnum.java
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">package</span> cn.dgchong.enum<span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @desc 优惠项枚举
+</span><span style="color:#75715e"> * @author xiaojiang
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">enum</span> DiscountEnum <span style="color:#f92672">{</span>
+    BALANCE<span style="color:#f92672">(</span>1<span style="color:#f92672">),</span>     <span style="color:#75715e">//账户余额
+</span><span style="color:#75715e"></span>    INTEGRAL<span style="color:#f92672">(</span>2<span style="color:#f92672">),</span>    <span style="color:#75715e">//平台积分
+</span><span style="color:#75715e"></span>    COIN<span style="color:#f92672">(</span>3<span style="color:#f92672">),</span>        <span style="color:#75715e">//平台币
+</span><span style="color:#75715e"></span>    COUPON<span style="color:#f92672">(</span>4<span style="color:#f92672">),</span>      <span style="color:#75715e">//满减卷
+</span><span style="color:#75715e"></span>    FREE_POSTTAGE<span style="color:#f92672">(</span>5<span style="color:#f92672">);</span>   <span style="color:#75715e">//免邮费   
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> type<span style="color:#f92672">;</span>    <span style="color:#75715e">//优惠类型
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">DiscountEnum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> type<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> type<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">//DiscountUtil.java
+</span><span style="color:#75715e"></span>
+<span style="color:#f92672">package</span> cn.dgchong.util<span style="color:#f92672">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * @desc 优惠项存储、判断工具类
+</span><span style="color:#75715e"> * @author xiaojiang
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DiscountUtil</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 检测是否有使用过该优惠
+</span><span style="color:#75715e">     * @param type 优惠类型值
+</span><span style="color:#75715e">     * @param value 存储值
+</span><span style="color:#75715e">     * @return boolean 判断结果 [true:是  |false:否]
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isUseDiscount</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> type<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> value<span style="color:#f92672">){</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>value <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>1<span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">(</span>type<span style="color:#f92672">-</span>1<span style="color:#f92672">)))</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 设置使用过的优惠
+</span><span style="color:#75715e">     * @param type 优惠类型值
+</span><span style="color:#75715e">     * @param value 存储值
+</span><span style="color:#75715e">     * @return int 添加优惠类型后的存储值
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">setDiscountValue</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> type<span style="color:#f92672">,</span><span style="color:#66d9ef">int</span> value<span style="color:#f92672">){</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>value <span style="color:#f92672">|</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;&lt;</span> <span style="color:#f92672">(</span>type<span style="color:#f92672">-</span>1<span style="color:#f92672">)));</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><strong>代码说明：</strong></p>
+<p>  优惠的种类，还是定义一个普通的枚举类，但是该枚举类的优惠种类值，并不是最最终存储到DB的值，而是表示占二进制数的第几位（从右至左数，从1开始）；当需要存储优惠种类到DB中，或者从DB中查询对应的优惠种类时，通过工具类进行运算转换。</p>
+<p>  工具类的运算，其实就是通过<strong>位运算</strong>来实现：设值时，通过<strong>位移</strong>、<strong>位或</strong>来设定所占二进制位数，返回设置占位后的十进制数；判断时，则通过<strong>位移</strong>、<strong>位与</strong>来判断优惠项应占位是否有占位，返回判断结果。（关于Java位运算，非本文重点，此处不再详述，有需要的同学可以另行查阅相关资料）</p>
+<p>  通过以上这种“<strong>特殊标识位</strong>”的方式，在一定程度上就可以达到方便标识存储又方便扩展的目的。</p>
+<p> </p>
+<h3 id="三特殊标识位优缺点">三、特殊标识位优缺点</h3>
+<p>  由以上分析可知，不同场景下可采用不同的标识方式，其也有相应的优缺点，此处主要说明下特殊标识位方式的优缺点。</p>
+<p><strong>优点：</strong></p>
+<p>  1、方便标识存储，一个字段就可以标识多种业务场景。</p>
+<p>  2、方便扩展，易于维护；当业务场景迅速扩展时，这种方式可以方便的标识新增的业务场景，数据也易于维护。要知道，在互联网场景下，业务的变化是非常快的，新加字段并不是那么方便。</p>
+<p><strong>缺点：</strong></p>
+<p>  1、数据的存储、查询需要转换，不够直观；相对普通的标识方式，没接触过的人需要一点时间理解这种使用特殊标识位的方式。</p>
+<p>  2、DB数据查询时，稍显繁琐；如，假如原来订单表[t_order]使用字段discount_type直接标识优惠种类，那么，查询使用了某种优惠的订单，SQL语句为：</p>
+<pre tabindex="0"><code class="language-xml-dtd" data-lang="xml-dtd">SELECT * FROM t_order WHERE discount_type = value;
+</code></pre><p>而改用mask字段这种特殊标识位的方式后，SQL语句为：</p>
+<pre tabindex="0"><code class="language-xml-dtd" data-lang="xml-dtd">SELECT * FROM t_order WHERE (mask &amp; (1&lt;&lt;(value-1))) &gt; 0;
+</code></pre><p>  显然，后一种SQL要复杂不少，这在数据量较大的情况下，这并不是一件很好的事情，好在这种查询频率一般不会太高。（SQL中的 value 表示待查询的优惠种类值）</p>
+<p> </p>
+<h4 id="四总结">四、总结</h4>
+<p>  1、使用标识位来标识对象信息时，可结合具体业务场景，选择相应的标识存储方案。</p>
+<p>  2、特殊标识位的方式，除了本文提到的标识订单优惠种类，还可用于标识“用户的角色信息”、“商品品类信息”、“参与的活动、奖励”等业务场景。</p>
+<p>  3、数据库设计，需结合具体业务需求具体分析，灵活变通，找到适合本身业务的一种实现方式，切忌生搬硬套；尽量在满足当前业务场景的前提下，考虑满足未来短期内可能的扩展。</p>
+
+        </section>
+      </div>
+    </div>
+  </div>  
+  <div class="container">
+    <div class="columns">
+      <div class="column has-text-right is-family-monospace is-centered-tablet-portrait">
+        最后修改:&nbsp;16 May 2022</div>
+    </div>
+  </div><div class="container" style="margin-top: 80px;">
+      <hr/>
+      <div class="columns">
+        <div class="column is-centered-tablet-portrait">
+          
+<div id="gitalk-container"></div>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '1a380dfb2919d0671fab',
+    clientSecret: '1bb9f659a3fddd0f00c55d009bb99f445dc58236',
+    repo: 'dgchong.github.io',
+    owner: 'dgchong',
+    admin: ['dgchong'],
+    id: location.pathname, 
+    distractionFreeMode: true 
+  });
+  (function() {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+      return;
+    }
+    gitalk.render('gitalk-container');
+  })();
+</script>
+
+        </div>
+      </div>
+    </div></section>
+<footer class="footer footer-dark">
+  <div class="container">
+    <div class="columns">
+      <div class="column">
+        <img src="/images/foot-img.png" alt="">
+        
+      </div>
+      
+    <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>网页</h3>
+          </div>
+          <ul class="link-list"><li><a href="/credits/">
+                  <span class="icon"><i class="fa fa-cube"></i></span>
+                  鸣谢
+                </a></li>
+            <li><a href="/tags/">
+                <span class="icon"><i class="fa fa-tag"></i></span> 
+                全部标签
+              </a></li>
+          </ul>
+        </div>
+      </div>
+    
+      
+      <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>联系</h3>
+          </div>
+          <ul class="link-list">
+            
+            
+            <li>
+              <a href="https://github.com/dgchong" target="_blank">
+                <span class="icon"><i class="fab fa-github-square"></i></span>
+                
+                  Github
+                
+              </a>
+            </li>
+                         
+            
+            <li>
+              <a href="mailto:dgchongteam@163.com" target="_blank">
+                <span class="icon"><i class="fa fa-envelope"></i></span>
+                
+                  邮件
+                
+              </a>
+            </li>
+            
+                   
+                   
+            
+            
+                         
+       
+          </ul>
+        </div>
+      </div>
+      
+
+      
+      <div class="column">
+        <div class="footer-column">
+          <div class="footer-header">
+              <h3>版权</h3>
+          </div>
+          <ul class="link-list">
+            <li>
+              <a>
+                <span class="icon"><i class="fa fa-copyright"></i></span>
+                东瓜冲工作室 2022-2023
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+
+    </div>
+  </div>
+</footer>
+    <div id="backtotop"><a href="#"></a></div><div class="sidebar scroll">
+  <div class="sidebar-header"><img src="/sidebar.svg" alt="">
+    
+    <a class="sidebar-close" href="javascript:void(0);">
+      <i data-feather="x"></i>
+    </a>
+  </div>
+  <div class="inner">
+    <ul class="sidebar-menu">
+      <li class="no-children"><a href="/tags/"><div class="columns">
+              <table width="100%">  
+                <tr>
+                  <td class="">
+                    <span class="icon"><i class="fa fa-cubes"></i></span>
+                    全部标签
+                  </td>
+                  <td class="has-text-right" >
+                      
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </a>
+      <li class="no-children">
+          <a href="/tags/%e5%bc%80%e6%ba%90">
+            <div class="columns">
+              
+              <table width="100%">  
+                  <tr>
+                    <td class=""><span class="icon"><i class="fa fa-cube"></i></span>开源</td>
+                    <td class="has-text-right" >
+                        <div class="tag-number">2</div>
+                      
+                    </td>
+                    
+                  </tr>
+              </table>
+              
+            </div>
+          </a>
+      </li>
+      <li class="no-children">
+          <a href="/tags/%e6%8a%80%e6%9c%af%e6%9e%b6%e6%9e%84">
+            <div class="columns">
+              
+              <table width="100%">  
+                  <tr>
+                    <td class=""><span class="icon"><i class="fa fa-cube"></i></span>技术架构</td>
+                    <td class="has-text-right" >
+                        <div class="tag-number">2</div>
+                      
+                    </td>
+                    
+                  </tr>
+              </table>
+              
+            </div>
+          </a>
+      </li></ul>
+  </div>
+</div>
+<script src="/js/jquery-2.2.4.893e90f6230962e42231635df650f20544ad22affc3ee396df768eaa6bc5a6a2.js" integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="></script>
+  <script src="/js/feather.4.22.0.1ab07abeb9975f283f6b5f29451981be680fbf77ea778f991d457511d210476a.js" integrity="sha256-GrB6vrmXXyg/a18pRRmBvmgPv3fqd4&#43;ZHUV1EdIQR2o="></script>
+  <script src="/js/modernizr-3.6.0.e013a1e54e3c19d83537ba42b900d34451e5e4b2e789be27a02ac9b152edb741.js" integrity="sha256-4BOh5U48Gdg1N7pCuQDTRFHl5LLnib4noCrJsVLtt0E="></script>
+  <script src="/js/refresh.62c1a9b7d85bcf4d944cd585a01dfa8fb15112a7d2cf9fb819db20493bfe7484.js" integrity="sha256-YsGpt9hbz02UTNWFoB36j7FREqfSz5&#43;4GdsgSTv&#43;dIQ="></script><script>
+  window.MathJax = {
+    loader: {
+      load: ['core', 'input/tex-base', 'output/chtml'],  
+      source: {
+        'core': '\/js\/mathjax\/core.d48fedf25c74c54fa6bf79646de92b02155872bdc4f5f7d0bbfc662523d8b4f5.js',
+        'input/tex-base': '\/js\/mathjax\/tex-base.1b68b8741dfc54e8f7222f88bea8ffcfc57ac54b2a2d8f4edf6800aa44d49441.js',
+        'output/chtml': '\/js\/mathjax\/chtml.926cd166e0f8c1f8a566a718d60c9c58a2b7142b156d30d5f02cec7c3b0ad60a.js',
+        'output/chtml/fonts/tex': '\/js\/mathjax\/tex_out.b8b2bb939c0dae84bf1390bfe6d32af13e83f647cdac01d544d2a7a517477e9d.js'
+      },
+    },
+    chtml: {
+      fontURL: '/fonts' 
+    },
+  };
+</script><script src="/js/mathjax/startup.234a2513e6bdbc1eee06ca19abceca30fe4034e82afb373c08274c1ba2feb1a6.js" integrity="sha256-I0olE&#43;a9vB7uBsoZq87KMP5ANOgq&#43;zc8CCdMG6L&#43;saY="></script>
+  <script src="/js/highlight.9.18.1.b1c58829c55afcc1f568022af4b08ed8976da404d2990b7535bd8e19c0e3310c.js" integrity="sha256-scWIKcVa/MH1aAIq9LCO2JdtpATSmQt1Nb2OGcDjMQw="></script>
+  <script src="/js/highlightjs-line-numbers.2.7.0.min.ddfe282e07b7ec1ed069c23f92c7c8216ddb3f1879c4e962d37fd52adbd15a05.js" integrity="sha256-3f4oLge37B7QacI/ksfIIW3bPxh5xOli03/VKtvRWgU="></script><script>
+  hljs.initHighlightingOnLoad();
+  hljs.initLineNumbersOnLoad();
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.querySelectorAll('.codeinline').forEach((block) => {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+</body>
+</html>
